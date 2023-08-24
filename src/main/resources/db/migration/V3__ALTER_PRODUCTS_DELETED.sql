@@ -1,0 +1,1 @@
+ALTER TABLE products MODIFY COLUMN deleted BOOL DEFAULT false NOT NULL;

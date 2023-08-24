@@ -1,5 +1,5 @@
 CREATE TABLE users (
-	id varchar(20) NOT NULL,
+	id INT UNSIGNED auto_increment NOT NULL,
 	user_name varchar(255) NOT NULL,
 	cpf varchar(18) NOT NULL,
 	email varchar(255) NOT NULL,
