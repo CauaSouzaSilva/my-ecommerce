@@ -38,15 +38,7 @@ public class ProductService {
     }
 
     public ProductDTO findOneById(Long id) {
-        if (id == null || id < 0)
-            throw new ObjectNotNullException("Id is null or less than 0!");
-        Product entity = repository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("No Product found for this ID!"));
-        if (entity == null || entity.getId() == null || entity.getDeleted())
-            throw new ResourceNotFoundException("No Product found for this ID!");
-        ProductDTO dto = mapperProductToDTO(entity);
-
-        return dto;
+        return mapperProductToDTO(findProductById(id));
     }
 
     public ProductDTO create(ProductDTO product) {
@@ -78,6 +70,16 @@ public class ProductService {
             return;
         entity.setDeleted(true);
         repository.save(entity);
+    }
+
+    public Product findProductById(Long id) {
+        if (id == null || id < 0)
+            throw new ObjectNotNullException("Id is null or less than 0!");
+        Product entity = repository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("No Product found for this ID!"));
+        if (entity == null || entity.getId() == null || entity.getDeleted())
+            throw new ResourceNotFoundException("No Product found for this ID!");
+        return entity;
     }
 
     private Product mapperDTOtoProduct(ProductDTO dto) {

@@ -33,7 +33,7 @@ public class Order {
     private Long id;
 
     @ManyToOne(targetEntity = User.class)
-    @JoinColumn(name = "shopper_id", referencedColumnName = "id")
+    @JoinColumn(name = "seller_id", referencedColumnName = "id")
     private User shopper;
 
     @Column(name = "created_at")
