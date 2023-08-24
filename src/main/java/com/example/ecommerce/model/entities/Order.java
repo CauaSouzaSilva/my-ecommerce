@@ -30,7 +30,7 @@ public class Order {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
     @ManyToOne(targetEntity = User.class)
     @JoinColumn(name = "shopper_id", referencedColumnName = "id")
@@ -44,5 +44,5 @@ public class Order {
 
     @ManyToMany
     @JoinTable(name = "orders_items", joinColumns = @JoinColumn(name = "order_id"), inverseJoinColumns = @JoinColumn(name = "item_id"))
-    private List<Items> items;
+    private List<Item> items;
 }

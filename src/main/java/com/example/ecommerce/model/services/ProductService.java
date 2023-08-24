@@ -57,14 +57,14 @@ public class ProductService {
         return dto;
     }
 
-    public ProductDTO update(Long id, ProductDTO product) {
-        if (isValidProduct(product) || id == null || id < 0)
+    public ProductDTO update(ProductDTO product) {
+        if (isValidProduct(product) || product.id() == null || product.id() < 0)
             throw new ObjectNotNullException("Id, Name and Price is required!");
-        Product entity = repository.findById(id)
+        Product entity = repository.findById(product.id())
                 .orElseThrow(() -> new ResourceNotFoundException("No Product found for this ID!"));
         if (entity.getDeleted())
             throw new ResourceNotFoundException("No Product found for this ID!");
-        entity = repository.save(mapperDTOtoProduct(id, product));
+        entity = repository.save(mapperDTOtoProduct(product.id(), product));
         ProductDTO dto = mapperProductToDTO(entity);
         return dto;
     }
@@ -104,7 +104,9 @@ public class ProductService {
         String description = entity.getDescription() == null ? "" : entity.getDescription();
         BigDecimal freightPrice = entity.getFreightPrice() == null ? BigDecimal.valueOf(0L) : entity.getFreightPrice();
 
-        return new ProductDTO(entity.getName(),
+        return new ProductDTO(
+                entity.getId(),
+                entity.getName(),
                 description,
                 entity.getPrice(),
                 freightPrice,

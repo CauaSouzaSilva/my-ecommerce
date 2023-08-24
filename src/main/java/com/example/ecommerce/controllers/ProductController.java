@@ -41,7 +41,7 @@ public class ProductController {
 
     @PutMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ProductDTO update(@PathVariable Long id, @RequestBody ProductDTO dto) {
-        return service.update(id, dto);
+        return service.update(dto);
     }
 
     @SuppressWarnings("rawtypes")
