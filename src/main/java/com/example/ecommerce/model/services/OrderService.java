@@ -70,6 +70,7 @@ public class OrderService {
 
     public OrderDTO editItem(Long itemId, ProductItemDTO item) {
         Order order = findOrderById(item.orderId());
+        isItemIdNull(itemId);
         ItemDTO orderItem = null;
         for (Item i : order.getItems()) {
             if (i.getId() == itemId)
@@ -80,6 +81,26 @@ public class OrderService {
             throw new ResourceNotFoundException("Item not found, try another id");
         OrderDTO dto = mapperOrderToDTO(order);
         return dto;
+    }
+
+    public void removeItemFromOrder(Long orderId, Long itemId) {
+        Order order = findOrderById(orderId);
+        isItemIdNull(itemId);
+        Boolean itemNotExists = true;
+        for (Item i : order.getItems()) {
+            if (i.getId() == itemId) {
+                itemService.removeItem(itemId);
+                itemNotExists = false;
+            }
+        }
+        if (itemNotExists)
+            throw new ResourceNotFoundException("Item not found, try another id");
+    }
+
+    private void isItemIdNull(Long itemId) {
+        if (itemId == null || itemId < 0) {
+            throw new ObjectNotNullException("Item id is required!");
+        }
     }
 
     private OrderDTO mapperOrderToDTO(Order entity) {

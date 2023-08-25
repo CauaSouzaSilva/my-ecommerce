@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.example.ecommerce.exceptions.ResourceNotFoundException;
 import com.example.ecommerce.model.DTOs.ItemDTO;
 import com.example.ecommerce.model.DTOs.ProductItemDTO;
 import com.example.ecommerce.model.entities.Item;
@@ -54,5 +55,11 @@ public class ItemService {
         List<ItemDTO> dtos = new ArrayList<>();
         items.forEach(i -> dtos.add(mapperItemToDTO(i)));
         return dtos;
+    }
+
+    public void removeItem(Long itemId) {
+        Item item = repository.findById(itemId)
+                .orElseThrow(() -> new ResourceNotFoundException("Item not found, try another id."));
+        repository.delete(item);
     }
 }
