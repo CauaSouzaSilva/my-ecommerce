@@ -21,12 +21,6 @@ public class ItemService {
     @Autowired
     private ProductService productService;
 
-    public List<ItemDTO> mapperListItemToListDTO(List<Item> items) {
-        List<ItemDTO> dtos = new ArrayList<>();
-        items.forEach(i -> dtos.add(mapperItemToDTO(i)));
-        return dtos;
-    }
-
     public Item createItem(ProductItemDTO item) {
         Product product = productService.findProductById(item.productId());
         Item entity = repository.save(new Item(
@@ -35,6 +29,13 @@ public class ItemService {
                 item.amount(),
                 item.variation()));
         return entity;
+    }
+
+    public ItemDTO editItem(Item item, ProductItemDTO productItemDTO) {
+        item.setAmount(productItemDTO.amount());
+        item.setVariation(productItemDTO.variation());
+        ItemDTO dto = mapperItemToDTO(repository.save(item));
+        return dto;
     }
 
     private ItemDTO mapperItemToDTO(Item item) {
@@ -47,5 +48,11 @@ public class ItemService {
                 item.getAmount(),
                 item.getVariation(),
                 item.getProduct().getSeller().getUserName());
+    }
+
+    public List<ItemDTO> mapperListItemToListDTO(List<Item> items) {
+        List<ItemDTO> dtos = new ArrayList<>();
+        items.forEach(i -> dtos.add(mapperItemToDTO(i)));
+        return dtos;
     }
 }

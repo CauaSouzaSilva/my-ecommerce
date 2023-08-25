@@ -9,8 +9,10 @@ import org.springframework.stereotype.Service;
 
 import com.example.ecommerce.exceptions.ObjectNotNullException;
 import com.example.ecommerce.exceptions.ResourceNotFoundException;
+import com.example.ecommerce.model.DTOs.ItemDTO;
 import com.example.ecommerce.model.DTOs.OrderDTO;
 import com.example.ecommerce.model.DTOs.ProductItemDTO;
+import com.example.ecommerce.model.entities.Item;
 import com.example.ecommerce.model.entities.Order;
 import com.example.ecommerce.model.repositories.OrderRepository;
 import com.example.ecommerce.model.repositories.UserRepository;
@@ -63,6 +65,20 @@ public class OrderService {
         Order entity = findOrderById(item.orderId());
         entity.getItems().add(itemService.createItem(item));
         OrderDTO dto = mapperOrderToDTO(repository.save(entity));
+        return dto;
+    }
+
+    public OrderDTO editItem(Long itemId, ProductItemDTO item) {
+        Order order = findOrderById(item.orderId());
+        ItemDTO orderItem = null;
+        for (Item i : order.getItems()) {
+            if (i.getId() == itemId)
+                orderItem = itemService.editItem(i, item);
+
+        }
+        if (orderItem == null)
+            throw new ResourceNotFoundException("Item not found, try another id");
+        OrderDTO dto = mapperOrderToDTO(order);
         return dto;
     }
 
