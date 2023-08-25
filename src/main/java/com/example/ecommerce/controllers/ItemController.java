@@ -1,11 +1,8 @@
 package com.example.ecommerce.controllers;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -19,24 +16,27 @@ import com.example.ecommerce.model.DTOs.ProductItemDTO;
 import com.example.ecommerce.model.services.OrderService;
 
 @RestController
-@RequestMapping("/api/order")
-public class OrderController {
+@RequestMapping("/api/order/item")
+public class ItemController {
 
     @Autowired
-    private OrderService service;
+    private OrderService orderService;
 
-    @GetMapping
-    public List<OrderDTO> findAll() {
-        return service.findAll();
+    @PostMapping("/item")
+    public OrderDTO addItem(@RequestBody ProductItemDTO dto) {
+        return orderService.addItem(dto);
     }
 
-    @GetMapping(path = "/{id}")
-    public OrderDTO findOne(@PathVariable Long id) {
-        return service.findOrderDTOById(id);
+    @PutMapping("/item/{id}")
+    public OrderDTO editItem(@PathVariable Long id, @RequestBody ProductItemDTO dto) {
+        return orderService.editItem(id, dto);
     }
 
-    @PostMapping
-    public OrderDTO createOrder() {
-        return service.createOrder();
+    @DeleteMapping("/item")
+    public ResponseEntity<?> removeItemFromOrder(
+            @RequestParam(required = true, name = "orderId") Long orderId,
+            @RequestParam(required = true, name = "itemId") Long itemId) {
+        orderService.removeItemFromOrder(orderId, itemId);
+        return ResponseEntity.status(204).build();
     }
 }
